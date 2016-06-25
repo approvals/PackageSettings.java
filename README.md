@@ -1,7 +1,36 @@
-# EclipseTips
-tl;dr eclipse shortcuts in editor
+# PackageSettings
+tl;dr package level settings in java
 
-EclipseTips is a java object that's *sole* purpose is to provide documentation.
-Add this small jar (5k) and enable quick cheatsheet to show while in eclipse
+PackageSettings is a way to set default constants.
 
-![screenshot](https://raw.githubusercontent.com/LearnWithLlew/EclipseTips/master/Images/example_screen_shot.png)
+```java
+package com.yourcompany.tests;
+public class PackageSettings
+{
+  public static String defaultReporter = "ImageReporter";
+}
+```
+
+If anything from com.yourcompany.tests calls you you can then access the settnigs
+```java
+PackageLevelSettings.get().get("defaultReport").getValue()); // ImageReporter
+```
+
+PackageSettings also collapses with the element of least surprise.
+
+For example if you also had:
+```java
+package com.yourcompany;
+public class PackageSettings
+{
+  public static String defaultReporter = "DiffReporter";
+  public static String frontLoadedReporter = "JenkinsReporter";
+
+}
+```
+Then you would have
+```java
+ Map<String, Settings> settings = PackageLevelSettings.get();
+ settings.get("defaultReport").getValue()); // ImageReporter
+ settings.get("frontLoadedReporter").getValue()); // JenkinsReporter
+```

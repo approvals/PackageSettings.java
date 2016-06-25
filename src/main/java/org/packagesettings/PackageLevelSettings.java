@@ -7,15 +7,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import com.spun.util.ObjectUtils;
-import com.spun.util.io.StackElementLevelSelector;
-
 public class PackageLevelSettings
 {
-  public static Map<String, Object> get()
+  public static Map<String, Settings> get()
   {
-    Map<String, Object> settings = new HashMap<String, Object>();
-    StackElementLevelSelector stack = new StackElementLevelSelector(1);
+    Map<String, Settings> settings = new HashMap<String, Settings>();
     try
     {
       HashSet<String> done = new HashSet<String>();
@@ -28,18 +24,18 @@ public class PackageLevelSettings
     }
     catch (Throwable t)
     {
-      throw ObjectUtils.throwAsError(t);
+      throw throwAsError(t);
     }
     return settings;
   }
-  private static Map<String, Object> getSettingsFor(String packageName, HashSet<String> done)
+  private static Map<String, Settings> getSettingsFor(String packageName, HashSet<String> done)
   {
     if (packageName == null || done.contains(packageName)) { return Collections.emptyMap(); }
-    Map<String, Object> settings = new HashMap<String, Object>();
+    Map<String, Settings> settings = new HashMap<String, Settings>();
     settings.putAll(getSettingsFor(getNextLevel(packageName), done));
     try
     {
-      Class<?> clazz = ObjectUtils.loadClass(packageName + ".PackageSettings");
+      Class<?> clazz = loadClass(packageName + ".PackageSettings");
       Field[] declaredFields = clazz.getDeclaredFields();
       for (Field field : declaredFields)
       {
@@ -73,5 +69,24 @@ public class PackageLevelSettings
   {
     int last = className.lastIndexOf(".");
     return (last < 0) ? null : className.substring(0, last);
+  }
+  public static Class<?> loadClass(String className) throws ClassNotFoundException
+  {
+    return Class.forName(className, true, Thread.currentThread().getContextClassLoader());
+  }
+  public static Error throwAsError(Throwable t) throws Error
+  {
+    if (t instanceof RuntimeException)
+    {
+      throw (RuntimeException) t;
+    }
+    else if (t instanceof Error)
+    {
+      throw (Error) t;
+    }
+    else
+    {
+      throw new Error(t);
+    }
   }
 }
