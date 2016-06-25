@@ -49,7 +49,6 @@ public class PackageLevelSettings
     {
       //Ignore
     }
-    System.out.println("Settings for : " + packageName + "\n" + settings);
     done.add(packageName);
     return settings;
   }
