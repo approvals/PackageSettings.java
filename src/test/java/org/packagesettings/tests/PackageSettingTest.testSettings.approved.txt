@@ -1,0 +1,4 @@
+ignoreTest : true[loaded from org.PackageSettings] 
+mainName : PackageSettings[loaded from org.PackageSettings] 
+overridden : org.packagesettings.tests[loaded from org.packagesettings.tests.PackageSettings] 
+unique : This is for Tests only[loaded from org.packagesettings.tests.PackageSettings] 
